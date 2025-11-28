@@ -21,6 +21,7 @@ services:
   postgres:
     image: postgres:14-alpine
     container_name: postgres-drop-shielded
+    network_mode: "service:gluetun"
     healthcheck:
       test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
       interval: 30s
@@ -37,16 +38,17 @@ services:
   drop:
     image: ghcr.io/drop-oss/drop:latest
     container_name: drop-drop-shielded
+    network_mode: "service:gluetun"
     depends_on:
       postgres:
         condition: service_healthy
     ports:
-      - 3000:3000
+      - ${DROP_AIRVPN_PORT}:3000
     volumes:
       - ${LIBRARY_PATH_1}:/library/1
       - ${LIBRARY_PATH_2}:/library/2
-      - ./data:/data
+      - ${DROP_DATA_PATH}:/data
     environment:
       - HOSTNAME=drop-drop-shielded
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT} # default, customise if accessing from another computer or behind a reverse proxy
+      - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT}
