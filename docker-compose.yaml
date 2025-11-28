@@ -45,8 +45,10 @@ services:
     #ports:
     #  - ${DROP_AIRVPN_PORT}:3000
     volumes:
-      - ${LIBRARY_PATH_1}:/library/1
-      - ${LIBRARY_PATH_2}:/library/2
+      - ${LIBRARY_PATH}:/library/
+      #For Multi Library
+      #- ${LIBRARY_PATH_1}:/library/1
+      #- ${LIBRARY_PATH_2}:/library/2
       - ${DROP_DATA_PATH}:/data
     environment:
       - HOSTNAME=drop-drop-shielded
