@@ -1,0 +1,52 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun-drop-shielded
+    restart: unless-stopped
+    env_file:
+    - .env
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - HOSTNAME=gluetun-drop-shielded
+      - VPN_SERVICE_PROVIDER=airvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - FIREWALL_VPN_INPUT_PORTS=${DROP_AIRVPN_PORT},${ROMM_AIRVPN_PORT}
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres-drop-shielded
+    healthcheck:
+      test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - HOSTNAME=postgres-drop-shielded
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+  drop:
+    image: ghcr.io/drop-oss/drop:latest
+    container_name: drop-drop-shielded
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    volumes:
+      - ${LIBRARY_PATH_1}:/library/1
+      - ${LIBRARY_PATH_2}:/library/2
+      - ./data:/data
+    environment:
+      - HOSTNAME=drop-drop-shielded
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT} # default, customise if accessing from another computer or behind a reverse proxy
