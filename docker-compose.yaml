@@ -22,6 +22,8 @@ services:
     image: postgres:14-alpine
     container_name: postgres-drop-shielded
     network_mode: "service:gluetun"
+    env_file:
+    - .env
     healthcheck:
       test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
       interval: 30s
@@ -42,6 +44,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+    - .env
     #ports:
     #  - ${DROP_AIRVPN_PORT}:3000
     volumes:
