@@ -62,5 +62,5 @@ services:
       - ${DROP_DATA_PATH}:/data
     environment:
       - HOSTNAME=drop-drop-shielded
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-drop-shielded:5432/${POSTGRES_DB}
       - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT}
