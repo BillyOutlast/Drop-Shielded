@@ -59,7 +59,7 @@ services:
       - --entrypoints.web.address=:${DROP_AIRVPN_PORT}
       - --log.level=INFO
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/podman/podman.sock:/var/run/docker.sock:ro
     security_opt:
       - "label=disable"
   drop:
