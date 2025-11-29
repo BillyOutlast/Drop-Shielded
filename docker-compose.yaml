@@ -61,7 +61,7 @@ services:
       - drop
   drop:
     image: ghcr.io/drop-oss/drop:latest
-    container_name: drop-drop-shielded
+    container_name: drop
     network_mode: "service:gluetun"
     restart: unless-stopped
     depends_on:
@@ -81,6 +81,34 @@ services:
       - HOSTNAME=drop-drop-shielded
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-drop-shielded:5432/${POSTGRES_DB}
       - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT}
+  gamevault-backend:
+    image: phalcode/gamevault-backend:latest
+    container_name: gamevault-backend
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+    environment:
+      DB_HOST: gamevault-db
+      DB_USERNAME: ${GAMEVAULT_DB_USERNAME}
+      DB_PASSWORD: ${GAMEVAULT_DB_PASSWORD}
+    volumes:
+      # Mount the folder where your games are
+      - ${LIBRARY_PATH}:/files
+      # Mount the folder where GameVault should store its media
+      - ./gamevault-media:/media
+    #ports:
+    #  - 8080:8080/tcp
+  db:
+    image: postgres:17
+    container_name: gamevault-db
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    environment:
+      POSTGRES_USER: ${GAMEVAULT_DB_USERNAME}
+      POSTGRES_PASSWORD: ${GAMEVAULT_DB_PASSWORD}
+      POSTGRES_DB: gamevault
+    volumes:
+      # Mount the folder where your PostgreSQL database files should land
+      - ./gamevault-db:/var/lib/postgresql/data
 networks:
   gluetun-drop-network:
     driver: bridge
