@@ -53,13 +53,14 @@ services:
     - .env
     command:
       - --api.dashboard=true
-      - --providers.docker=true
       - --providers.docker.exposedByDefault=false
       - --entrypoints.web.address=:${DROP_AIRVPN_PORT}
 #      - --entrypoints.websecure.address=:443
 #      - --certificatesresolvers.myresolver.acme.tlschallenge=true
 #      - --certificatesresolvers.myresolver.acme.email=your-email@example.com
 #      - --certificatesresolvers.myresolver.acme.storage=/etc/traefik/acme.json
+    security_opt:
+      - "label=disable"
   drop:
     image: ghcr.io/drop-oss/drop:latest
     container_name: drop-drop-shielded
