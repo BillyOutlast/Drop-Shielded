@@ -30,6 +30,8 @@ services:
       timeout: 60s
       retries: 5
       start_period: 10s
+    security_opt:
+      - "label=disable"
     volumes:
       - ./db:/var/lib/postgresql/data
     environment:
@@ -46,6 +48,8 @@ services:
         condition: service_healthy
     env_file:
     - .env
+    security_opt:
+      - "label=disable"
     #ports:
     #  - ${DROP_AIRVPN_PORT}:3000
     volumes:
