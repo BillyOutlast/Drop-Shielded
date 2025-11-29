@@ -57,7 +57,7 @@ services:
       - drop
   drop:
     image: ghcr.io/drop-oss/drop:latest
-    container_name: drop
+    container_name: drop-shielded
     network_mode: "service:gluetun"
     restart: unless-stopped
     depends_on:
