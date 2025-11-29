@@ -85,3 +85,6 @@ networks:
   gluetun-drop-network:
     driver: bridge
     name: gluetun-drop-network
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
