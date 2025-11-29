@@ -3,6 +3,9 @@ services:
     image: qmcgaw/gluetun
     container_name: gluetun-drop-shielded
     restart: unless-stopped
+    networks:
+      gluetun-drop-network:
+        ipv4_address: 172.20.0.20
     env_file:
     - .env
     cap_add:
