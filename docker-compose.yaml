@@ -20,10 +20,6 @@ services:
       - SERVER_HOSTNAMES=${AIRVPN_SERVER}
       - FIREWALL_VPN_INPUT_PORTS=${DROP_AIRVPN_PORT},${ROMM_AIRVPN_PORT}
       - VPN_PORT_FORWARDING="${VPN_PORT_FORWARDING}"
-      - BLOCK_MALICIOUS="${BLOCK_MALICIOUS}"
-      - BLOCK_SURVEILLANCE="${BLOCK_SURVEILLANCE}"
-      - BLOCK_ADS="${BLOCK_ADS}"
-      - DOT_PROVIDERS="${DOT_PROVIDERS}"
   postgres:
     image: postgres:14-alpine
     container_name: postgres-drop-shielded
