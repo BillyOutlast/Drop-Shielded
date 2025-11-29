@@ -88,4 +88,4 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.drop.rule=Host(`${DROP_DDNS}`)"
       - "traefik.http.routers.drop.entrypoints=web"
-      - "traefik.http.services.drop.loadbalancer.server.port=3000"
+      - "traefik.http.services.drop.loadbalancer.server.url=http://127.0.0.1:3000"
