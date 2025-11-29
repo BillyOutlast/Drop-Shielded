@@ -45,7 +45,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
   traefik:
-    image: traefik:v3.0
+    image: docker.io/traefik:latest
     container_name: traefik-drop-shielded
     network_mode: "service:gluetun"
     restart: unless-stopped
