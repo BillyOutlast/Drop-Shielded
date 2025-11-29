@@ -90,6 +90,8 @@ services:
       DB_HOST: gamevault-db
       DB_USERNAME: ${GAMEVAULT_DB_USERNAME}
       DB_PASSWORD: ${GAMEVAULT_DB_PASSWORD}
+    security_opt:
+      - "label=disable"
     volumes:
       # Mount the folder where your games are
       - ${LIBRARY_PATH}:/files
@@ -109,6 +111,8 @@ services:
     volumes:
       # Mount the folder where your PostgreSQL database files should land
       - ./gamevault-db:/var/lib/postgresql/data
+    security_opt:
+      - "label=disable"
 networks:
   gluetun-drop-network:
     driver: bridge
