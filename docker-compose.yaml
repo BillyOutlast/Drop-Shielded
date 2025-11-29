@@ -1,7 +1,7 @@
 services:
   gluetun:
     image: qmcgaw/gluetun
-    container_name: gluetun-drop-shielded
+    container_name: gluetun-shielded
     restart: unless-stopped
     networks:
       gluetun-drop-network:
@@ -18,7 +18,7 @@ services:
     volumes:
       - ./gluetun:/gluetun
     environment:
-      - HOSTNAME=gluetun-drop-shielded
+      - HOSTNAME=gluetun-shielded
       - VPN_SERVICE_PROVIDER=airvpn
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
@@ -27,7 +27,7 @@ services:
       - FIREWALL_VPN_INPUT_PORTS=${DROP_AIRVPN_PORT}
   postgres:
     image: postgres:14-alpine
-    container_name: postgres-drop-shielded
+    container_name: postgres-shielded
     network_mode: "service:gluetun"
     restart: unless-stopped
     env_file:
@@ -43,13 +43,13 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     environment:
-      - HOSTNAME=postgres-drop-shielded
+      - HOSTNAME=postgres-shielded
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
   nginx:
     image: nginx:alpine
-    container_name: nginx-drop-shielded
+    container_name: nginx-shielded
     network_mode: "service:gluetun"
     restart: unless-stopped
     volumes:
@@ -78,8 +78,8 @@ services:
       #- ${LIBRARY_PATH_2}:/library/2
       - ${DROP_DATA_PATH}:/data
     environment:
-      - HOSTNAME=drop-drop-shielded
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-drop-shielded:5432/${POSTGRES_DB}
+      - HOSTNAME=drop-shielded
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-shielded:5432/${POSTGRES_DB}
       - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT}
   gamevault-backend:
     image: phalcode/gamevault-backend:latest
@@ -87,9 +87,9 @@ services:
     network_mode: "service:gluetun"
     restart: unless-stopped
     environment:
-      DB_HOST: gamevault-db
-      DB_USERNAME: ${GAMEVAULT_DB_USERNAME}
-      DB_PASSWORD: ${GAMEVAULT_DB_PASSWORD}
+      - DB_HOST=postgres-shielded
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
     security_opt:
       - "label=disable"
     volumes:
@@ -99,20 +99,6 @@ services:
       - ./gamevault-media:/media
     #ports:
     #  - 8080:8080/tcp
-  db:
-    image: postgres:17
-    container_name: gamevault-db
-    restart: unless-stopped
-    network_mode: "service:gluetun"
-    environment:
-      POSTGRES_USER: ${GAMEVAULT_DB_USERNAME}
-      POSTGRES_PASSWORD: ${GAMEVAULT_DB_PASSWORD}
-      POSTGRES_DB: gamevault
-    volumes:
-      # Mount the folder where your PostgreSQL database files should land
-      - ./gamevault-db:/var/lib/postgresql/data
-    security_opt:
-      - "label=disable"
 networks:
   gluetun-drop-network:
     driver: bridge
