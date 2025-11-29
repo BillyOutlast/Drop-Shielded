@@ -52,8 +52,6 @@ services:
         condition: service_healthy
     env_file:
     - .env
-    ports:
-      - "${DROP_AIRVPN_PORT}:3000"
     security_opt:
       - "label=disable"
     volumes:
