@@ -73,6 +73,8 @@ services:
       - ${DROP_DATA_PATH}:/data
     environment:
       - HOSTNAME=drop-shielded
+      - IGDB_CLIENT_ID=${METADATA_IGDB_CLIENT_ID}
+      - IGDB_CLIENT_SECRET=${METADATA_IGDB_CLIENT_SECRET}
       - DATABASE_URL=postgres://${POSTGRES_USER_DROP}:${POSTGRES_PASSWORD_DROP}@postgres-shielded:5432/${POSTGRES_DB_DROP}
       - EXTERNAL_URL=http://${DROP_DDNS}:${DROP_AIRVPN_PORT}
   gamevault-backend:
@@ -83,6 +85,8 @@ services:
     environment:
       - DB_SYSTEM=SQLITE
       - container_name=gamevault-backend-shielded
+      - METADATA_IGDB_CLIENT_ID=${METADATA_IGDB_CLIENT_ID}
+      - METADATA_IGDB_CLIENT_SECRET=${METADATA_IGDB_CLIENT_SECRET}
     security_opt:
       - "label=disable"
     volumes:
