@@ -8,6 +8,8 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+    volumes:
+      - /etc/resolv.conf:/etc/resolv.conf:ro
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
