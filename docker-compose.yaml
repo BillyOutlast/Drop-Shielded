@@ -86,10 +86,14 @@ services:
     security_opt:
       - "label=disable"
     volumes:
+      - ./gamevault/config:/config
+      - ./gamevault/media:/media
+      - ./gamevault/savefiles:/savefiles
+      - ./gamevault/logs:/logs
+      - ./gamevault/db:/db
+      - ./gamevault/plugins:/plugins
       # Mount the folder where your games are
       - ${LIBRARY_PATH}:/files
-      # Mount the folder where GameVault should store its media
-      - ./gamevault-media:/media
     #ports:
     #  - 8080:8080/tcp
 networks:
