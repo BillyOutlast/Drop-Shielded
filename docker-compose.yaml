@@ -8,8 +8,6 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    volumes:
-      - /etc/resolv.conf:/etc/resolv.conf:ro
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
@@ -21,6 +19,11 @@ services:
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
       - FIREWALL_VPN_INPUT_PORTS=${DROP_AIRVPN_PORT},${ROMM_AIRVPN_PORT}
+      - VPN_PORT_FORWARDING="${VPN_PORT_FORWARDING}"
+      - BLOCK_MALICIOUS="${BLOCK_MALICIOUS}"
+      - BLOCK_SURVEILLANCE="${BLOCK_SURVEILLANCE}"
+      - BLOCK_ADS="${BLOCK_ADS}"
+      - DOT_PROVIDERS="${DOT_PROVIDERS}"
   postgres:
     image: postgres:14-alpine
     container_name: postgres-drop-shielded
