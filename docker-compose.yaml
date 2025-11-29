@@ -46,6 +46,11 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
   traefik:
     image: traefik
+    container_name: traefik-drop-shielded
+    network_mode: "service:gluetun"
+    restart: unless-stopped
+    env_file:
+    - .env
     command:
       - --api.dashboard=true
       - --providers.docker=true
