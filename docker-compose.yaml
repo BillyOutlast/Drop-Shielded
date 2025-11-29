@@ -10,6 +10,8 @@ services:
       - NET_RAW
     devices:
       - /dev/net/tun:/dev/net/tun
+    ports:
+      - "14050:3000"
     environment:
       - HOSTNAME=gluetun-drop-shielded
       - VPN_SERVICE_PROVIDER=airvpn
@@ -17,6 +19,7 @@ services:
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - FIREWALL_VPN_INPUT_PORTS=${FIREWALL_VPN_INPUT_PORTS}
   postgres:
     image: postgres:14-alpine
     container_name: postgres-drop-shielded
